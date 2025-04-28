@@ -1,0 +1,88 @@
+@model ToDoList.Models.TodoItem
+
+@{
+    ViewData["Title"] = "Usuń zadanie";
+}
+
+<div class="row justify-content-center animate__animated animate__fadeIn">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white d-flex align-items-center">
+                <i class="fas fa-trash text-danger me-2 fs-4"></i>
+                <h1 class="h3 mb-0 text-danger">Usuń zadanie</h1>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <strong>Uwaga!</strong> Czy na pewno chcesz usunąć to zadanie? Ta operacja jest nieodwracalna.
+                </div>
+                
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary">
+                            <i class="fas fa-clipboard me-1"></i> @Model.Title
+                        </h5>
+                        @if (!string.IsNullOrEmpty(Model.Description))
+                        {
+                            <p class="card-text border-start ps-3 border-3 border-primary mt-3">@Model.Description</p>
+                        }
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Status:</span>
+                            @if (Model.IsCompleted)
+                            {
+                                <span class="badge bg-success rounded-pill">Ukończone</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-primary rounded-pill">Aktywne</span>
+                            }
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <span>Data utworzenia:</span>
+                            <span>@Model.CreatedAt.ToString("g")</span>
+                        </li>
+                        @if (Model.DueDate.HasValue)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Termin wykonania:</span>
+                                <span>@Model.DueDate.Value.ToShortDateString()</span>
+                            </li>
+                        }
+                        @if (Model.IsCompleted && Model.CompletedAt.HasValue)
+                        {
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>Data ukończenia:</span>
+                                <span>@Model.CompletedAt.Value.ToString("g")</span>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                
+                <form asp-action="Delete" class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <input type="hidden" asp-for="Id" />
+                    <a asp-action="Index" class="btn btn-light btn-lg me-md-2">
+                        <i class="fas fa-arrow-left me-1"></i> Anuluj
+                    </a>
+                    <button type="submit" class="btn btn-danger btn-lg animate__animated animate__pulse animate__infinite" style="animation-duration: 2s">
+                        <i class="fas fa-trash me-1"></i> Usuń zadanie
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const elements = document.querySelectorAll('.card, .alert, .list-group-item');
+            elements.forEach((element, index) => {
+                setTimeout(() => {
+                    element.classList.add('animate__animated', 'animate__fadeIn');
+                }, index * 100);
+            });
+        });
+    </script>
+}
