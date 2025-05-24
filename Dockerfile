@@ -7,16 +7,16 @@ RUN dotnet restore "ToDoList/ToDoList.csproj"
 RUN dotnet restore "ToDoList.Tests/ToDoList.Tests.csproj"
 
 COPY . .
-RUN dotnet build "ToDoList/ToDoList.csproj" -c Release -o /app/build
 
-FROM build AS test
-WORKDIR /src
-RUN dotnet test "ToDoList.Tests/ToDoList.Tests.csproj"  --verbosity normal
+RUN dotnet build "ToDoList/ToDoList.csproj" -c Release -o /app/build
+RUN dotnet build "ToDoList.Tests/ToDoList.Tests.csproj" -c Release -o /app/build-tests
+
+RUN dotnet test "ToDoList.Tests/ToDoList.Tests.csproj" --no-restore --no-build --logger:"trx;LogFileName=TestResults.trx"
 
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
-FROM test AS publish
+FROM build AS publish
 WORKDIR /src
 RUN dotnet publish "ToDoList/ToDoList.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
