@@ -2,17 +2,18 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 
 COPY ["ToDoList/*.csproj", "ToDoList/"]
-COPY ["ToDoList.Tests/*.csproj", "ToDoList.Tests/"]
 RUN dotnet restore "ToDoList/ToDoList.csproj"
-RUN dotnet restore "ToDoList.Tests/ToDoList.Tests.csproj"
 
 COPY . .
 
+<<<<<<< HEAD
 RUN dotnet build "ToDoList/ToDoList.csproj" -c Release -o /app/build
 RUN dotnet build "ToDoList.Tests/ToDoList.Tests.csproj" -c Release -o /app/build-tests
 
 RUN dotnet test "ToDoList.Tests/ToDoList.Tests.csproj" --no-restore --no-build --logger:"trx;LogFileName=TestResults.trx"
 
+=======
+>>>>>>> 1da1463c5f953b75878aa04e17a4d69fcba3d838
 RUN dotnet tool install --global dotnet-ef
 ENV PATH="${PATH}:/root/.dotnet/tools"
 
